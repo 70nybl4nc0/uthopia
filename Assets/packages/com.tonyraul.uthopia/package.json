@@ -1,0 +1,17 @@
+{
+  "name": "com.tonyraul.uthopia",
+  "displayName": "Uthopia",
+  "version": "0.0.1",
+  "unity": "2020.1",
+  "unityRelease": "0a10",
+  "description": "",
+  "keywords": [
+    "Uthopia",
+    "AI"
+  ],
+  "category": "AI",
+  "repository": {
+    "url": "https://70nybl4nc0/uthopia/assets/packages/com.tonyraul.uthopia/",
+    "type": "git"
+  }
+}
