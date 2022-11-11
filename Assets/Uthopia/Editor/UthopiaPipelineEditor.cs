@@ -1,6 +1,7 @@
 using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 using UnityEditor;
 
 public class UthopiaPipelineEditor
@@ -16,18 +17,7 @@ public class UthopiaPipelineEditor
         // Create a new "Assets/Games" folder to hold games
         AssetDatabase.CreateFolder("Assets", "Games");
 
-
-        LoadPackages();
-        LoadGames();
-    }
-
-
-    /// <summary>
-    /// Load game packages stored on Assets/Games
-    /// </summary>
-    static void LoadPackages()
-    {
-        
+        // Load game packages stored on Assets/Games
         var gamePackageGuids = AssetDatabase.FindAssets("", new[] { gamePackagesFolder });
 
         foreach (var guid in gamePackageGuids)
@@ -35,11 +25,23 @@ public class UthopiaPipelineEditor
             var path = AssetDatabase.GUIDToAssetPath(guid);
             AssetDatabase.ImportPackage(path, false);
         }
+
+        //TODO: Load games into pipeline
     }
 
-    static void LoadGames()
+
+
+    void AddSceneToBuildSettings(string scenePath)
     {
+        var newScenes = EditorBuildSettings.scenes.ToList();
 
+        if (newScenes.Any(s => s.path == scenePath))
+            return;
 
+        newScenes.Add(new EditorBuildSettingsScene(scenePath, true));
+
+        EditorBuildSettings.scenes = newScenes.ToArray();
     }
+
+
 }

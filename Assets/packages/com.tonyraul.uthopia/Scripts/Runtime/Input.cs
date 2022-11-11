@@ -2,26 +2,22 @@ using UnityEngine;
 
 namespace Uthopia
 {
-    public struct Input
+    public struct InputData
     {
-        public bool up { get; private set; }
-        public bool down { get; private set; }
-        public bool left { get; private set; }
-        public bool right { get; private set; }
+        public int moveX { get; private set; }
+        public int moveY { get; private set; }
+        public bool action { get; private set; }
 
-        public bool actionA { get; private set; }
-        public bool actionB { get; private set; }
+        public Vector3 direction => moveX * Vector3.right + moveY * Vector3.up;
 
-        public Input(int[] actions)
+        public InputData(int[] actions)
         {
-            Debug.Assert(actions.Length != 6);
+            Debug.Assert(actions.Length == 6);
 
-            up = actions[0] == 1;
-            down = actions[1] == 1;
-            left = actions[2] == 1;
-            right = actions[3] == 1;
-            actionA = actions[4] == 1;
-            actionB = actions[5] == 1;
+            moveX = actions[0];
+            moveY = actions[1];
+
+            action = actions[4] == 1;
         }
     }
 }
