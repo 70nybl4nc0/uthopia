@@ -32,21 +32,28 @@ namespace Uthopia
             this.seed = seed;
         }
 
-        public virtual void OnEpisodeBegin() {
-            Camera.main.backgroundColor = Color.black;
-        }
 
+
+
+        public abstract void OnEpisodeBegin();
         abstract public void OnInputReceived(InputData input);
 
         protected void Win()
         {
-            onWin.Invoke();
             Camera.main.backgroundColor = Color.green;
+            Invoke(nameof(RestartCamera), 0.1f);
+            onWin.Invoke();
         }
         protected void Lose()
         {
-            onLose.Invoke();
             Camera.main.backgroundColor = Color.red;
+            Invoke(nameof(RestartCamera), 0.1f);
+            onLose.Invoke();
+        }
+
+
+        void RestartCamera() {
+            Camera.main.backgroundColor = Color.black;
         }
 
 
@@ -56,6 +63,15 @@ namespace Uthopia
     public class GameSettings
     {
         public Vector2Int resolution;
+    }
+
+
+    public static class Vector2X {
+        public static Vector2 InsideSquareBounds(this Vector3 vector, float dimention) {
+            return new Vector2(Mathf.Clamp(vector.x, -dimention, dimention), Mathf.Clamp(vector.y, -dimention, dimention));
+        }
+
+
     }
 }
 

@@ -20,7 +20,7 @@ public class ObjectPool : MonoBehaviour
     Dictionary<string, List<GameObject>> m_pool = new Dictionary<string, List<GameObject>>();
 
 
-    public static T Get<T>(string id, T prefab, Vector3 position, Quaternion rotation, Transform parent = null) where T : Component
+    public static T Get<T>(string id, T prefab, Vector3 position, Quaternion rotation, Transform parent = null, string name = null) where T : Component
     {
         var pool = instance.m_pool;
         if (!pool.ContainsKey(id))
@@ -35,6 +35,7 @@ public class ObjectPool : MonoBehaviour
 
         var obj = pool[id][0].GetComponent<T>();
         obj.gameObject.SetActive(true);
+        obj.name = name ?? id;
         obj.transform.position = position;
         obj.transform.rotation = rotation;
 
@@ -46,11 +47,16 @@ public class ObjectPool : MonoBehaviour
     public static void Set(string id, GameObject obj)
     {
         var pool = instance.m_pool;
+        
         if (!pool.ContainsKey(id))
         {
             pool[id] = new List<GameObject>();
         }
 
+        if (pool[id].Contains(obj))
+            return;
+
+        obj.name = ".stored";
         obj.transform.parent = null;
         obj.SetActive(false);
         pool[id].Add(obj);

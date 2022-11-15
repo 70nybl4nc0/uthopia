@@ -15,6 +15,7 @@ public class EntityController : MonoBehaviour
     public float speed;
     Vector3 velocity = Vector3.zero;
     Transform m_target;
+    Vector3? m_targetPosition;
 
     public new Rigidbody2D rigidbody => m_rigidbody;
     public new Collider2D collider => m_collider;
@@ -22,6 +23,7 @@ public class EntityController : MonoBehaviour
 
     public UnityEvent<Collider2D> onCollisionEnter;
     public UnityEvent<Collider> onCollisionExit;
+    public UnityEvent onReachTarget;
 
     private void Awake()
     {
@@ -33,8 +35,14 @@ public class EntityController : MonoBehaviour
     {
         onCollisionEnter.RemoveAllListeners();
         onCollisionExit.RemoveAllListeners();
+        onReachTarget.RemoveAllListeners();
+        transform.localScale = new Vector3(1, 1, 1);
+        velocity = Vector3.zero;
         m_target = null;
+        m_targetPosition = null;
+        speed = 0;
         SetColor(Color.white);
+        StopAllCoroutines();
     }
 
     public void SetColor(Color color)
@@ -42,9 +50,18 @@ public class EntityController : MonoBehaviour
         m_renderer.color = color;
     }
 
-    public void FollowTarget(Transform target)
+    public void FollowTarget(Transform target, UnityAction onReachTarget = null)
     {
         m_target = target;
+        if (onReachTarget != null)
+            this.onReachTarget.AddListener(onReachTarget);
+    }
+
+    public void FollowPosition(Vector3 target, UnityAction onReachTarget = null)
+    {
+        m_targetPosition = target;
+        if (onReachTarget != null)
+            this.onReachTarget.AddListener(onReachTarget);
     }
 
 
@@ -58,21 +75,40 @@ public class EntityController : MonoBehaviour
         m_rigidbody.velocity = direction.normalized * speed;
     }
 
+    private Vector3? getTargetPosition()
+    {
+
+        Vector3? targetPosition = null;
+        if (m_target)
+            targetPosition = m_target.position;
+        else if (m_targetPosition != null)
+            targetPosition = m_targetPosition;
+
+        return targetPosition;
+    }
+
     private void FixedUpdate()
     {
-        if (!m_target) return;
+        Vector3? targetPosition = getTargetPosition();
 
-        var dirToTarget = (m_target.position - transform.position).normalized;
-        var targetVelocity = dirToTarget * speed;
+        if (targetPosition == null) return;
 
-        rigidbody.velocity = Vector3.SmoothDamp(
-            current: rigidbody.velocity,
-            target: targetVelocity,
-            currentVelocity: ref velocity,
-            smoothTime: 0.1f,
-            maxSpeed: speed,
-            deltaTime: Time.fixedDeltaTime
-            );
+        var diff = targetPosition.Value - transform.position;
+        var dirToTarget = diff.normalized;
+
+        m_rigidbody.velocity = dirToTarget * speed;
+    }
+
+    private void Update()
+    {
+        Vector3? targetPosition = getTargetPosition();
+
+        if (targetPosition == null) return;
+
+        var diff = targetPosition.Value - transform.position;
+
+        if (diff.magnitude <= Time.deltaTime * m_rigidbody.velocity.magnitude)
+            onReachTarget.Invoke();
     }
 
 

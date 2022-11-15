@@ -7,7 +7,7 @@ using Uthopia;
 namespace Uthopia.Games.Simple
 {
 
-    public class SimpleGameController : GameController
+    public class EvadeAndTouch : GameController
     {
         public EntityController prefab;
         public float speedScale = 1;
@@ -15,19 +15,30 @@ namespace Uthopia.Games.Simple
 
         List<GameObject> m_createdObjects = new List<GameObject>();
 
+        private void Update()
+        {
+            if (m_player)
+            {
+                m_player.transform.position = m_player.position.InsideSquareBounds(15);
+            }
+        }
+
+
 
         public override void OnEpisodeBegin()
         {
             m_createdObjects.ForEach(g => ObjectPool.Set("entity", g.gameObject));
             m_createdObjects.Clear();
 
+            // Spawn player
             var playerPos = Random.insideUnitCircle * 5;
             m_player = ObjectPool.Get("entity", prefab, Random.insideUnitCircle * 5, Quaternion.identity);
             m_player.Reset();
             m_player.SetColor(Color.white);
             m_player.speed = speedScale * 8;
 
-            for (var i = 0; i < 5; i++)
+            // Spawn enemys
+            for (var i = 0; i < 2; i++)
             {
                 var randomPos = Random.insideUnitCircle * 20 * speedScale;
                 var enemy = ObjectPool.Get("entity", prefab, playerPos + randomPos, Quaternion.identity);
@@ -49,14 +60,13 @@ namespace Uthopia.Games.Simple
                 m_createdObjects.Add(enemy.gameObject);
             }
 
-
+            // Spawn goal
             for (var i = 0; i < 1; i++)
             {
-                var randomPos = Random.insideUnitCircle * 13 * speedScale;
+                var randomPos = Random.insideUnitCircle * 10 * speedScale;
                 var goal = ObjectPool.Get("entity", prefab, playerPos + randomPos, Quaternion.identity);
                 goal.Reset();
                 goal.SetColor(Color.green);
-                goal.speed = speedScale * (6 + i);
                 goal.onCollisionEnter.RemoveAllListeners();
                 goal.onCollisionEnter.AddListener(
                     collision =>
@@ -68,21 +78,15 @@ namespace Uthopia.Games.Simple
                     }
                     );
 
+                goal.transform.position = goal.position.InsideSquareBounds(15);
                 m_createdObjects.Add(goal.gameObject);
             }
-
-
-
             m_createdObjects.Add(m_player.gameObject);
-
-            base.OnEpisodeBegin();
         }
 
         public override void OnInputReceived(InputData input)
         {
             m_player.Move(input.direction);
         }
-
-
     }
 }
