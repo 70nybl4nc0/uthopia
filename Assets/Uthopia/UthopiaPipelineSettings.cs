@@ -6,8 +6,9 @@ using UnityEngine;
 public class UthopiaPipelineSettings : SingletonScriptableObject<UthopiaPipelineSettings>
 {
     public int seed;
-    public List<GameVariant> trainingGames;
-    public List<GameVariant> testGames;
+    public List<GameVariant> games;
+
+
 }
 
 

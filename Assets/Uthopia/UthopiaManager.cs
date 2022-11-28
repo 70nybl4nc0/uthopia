@@ -3,32 +3,32 @@ using System.Collections.Generic;
 using UnityEngine;
 using Uthopia;
 using UnityEngine.SceneManagement;
+using UthopiaEnv;
 
 
 
 public class UthopiaManager : MonoBehaviour
 {
-    public GameController currentController;
+    public Game currentController;
 
-    IEnumerator<GameVariant> trainingGames;
-    IEnumerator<GameVariant> testGames;
+    IEnumerator<GameVariant> games;
 
     private void StartTraining()
     {
-        trainingGames = UthopiaPipelineSettings.instance.trainingGames.GetEnumerator();
+        games = UthopiaPipelineSettings.instance.games.GetEnumerator();
     }
 
 
 
     void NextTrainigGame() {
 
-        if (!trainingGames.MoveNext())
+        if (!games.MoveNext())
         {
             EndTraining();
             return;
         }
 
-        SceneManager.LoadScene(trainingGames.Current.sceneName, LoadSceneMode.Additive);
+        SceneManager.LoadScene(games.Current.sceneName, LoadSceneMode.Additive);
 
     }
 
@@ -38,6 +38,15 @@ public class UthopiaManager : MonoBehaviour
     void EndTraining()
     {
 
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            FindObjectOfType<AgentManager>().enabled = true;
+        }
     }
 
 

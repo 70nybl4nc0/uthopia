@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 using Uthopia;
@@ -7,10 +8,12 @@ using Uthopia;
 namespace Uthopia.Games.Simple
 {
 
-    public class EvadeAndTouch : GameController
+    public class EvadeAndTouch : Game
     {
         public EntityController prefab;
         public float speedScale = 1;
+        public int minNumberOfEnemies = 2;
+        public int maxNumberOfEnemies = 2;
         EntityController m_player;
 
         List<GameObject> m_createdObjects = new List<GameObject>();
@@ -23,12 +26,14 @@ namespace Uthopia.Games.Simple
             }
         }
 
-
-
         public override void OnEpisodeBegin()
         {
+            StopAllCoroutines();
+
+
             m_createdObjects.ForEach(g => ObjectPool.Set("entity", g.gameObject));
             m_createdObjects.Clear();
+
 
             // Spawn player
             var playerPos = Random.insideUnitCircle * 5;
@@ -36,16 +41,17 @@ namespace Uthopia.Games.Simple
             m_player.Reset();
             m_player.SetColor(Color.white);
             m_player.speed = speedScale * 8;
+            var totalEnemies = Random.Range(minNumberOfEnemies, maxNumberOfEnemies+1);
 
             // Spawn enemys
-            for (var i = 0; i < 2; i++)
+            for (var i = 0; i < totalEnemies; i++)
             {
-                var randomPos = Random.insideUnitCircle * 20 * speedScale;
+                var randomPos = Random.insideUnitCircle * 20;
                 var enemy = ObjectPool.Get("entity", prefab, playerPos + randomPos, Quaternion.identity);
                 enemy.Reset();
                 enemy.SetColor(Color.red);
-                enemy.speed = speedScale * (6 + i);
-                enemy.FollowTarget(m_player.transform);
+                enemy.speed = speedScale * (Random.Range(3f,8f));
+                StartCoroutine(StartFollow(enemy, m_player.transform, 2));
                 enemy.onCollisionEnter.RemoveAllListeners();
                 enemy.onCollisionEnter.AddListener(
                     collision =>
@@ -87,6 +93,17 @@ namespace Uthopia.Games.Simple
         public override void OnInputReceived(InputData input)
         {
             m_player.Move(input.direction);
+        }
+
+        IEnumerator StartFollow(EntityController entity, Transform target, float t) {
+
+            yield return new WaitForSeconds(t);
+            entity.FollowTarget(target);
+        }
+
+        public override InputActionMask GetInputMask()
+        {
+            return new InputActionMask(action5:false, action6: false, action7: false, action8: false);
         }
     }
 }

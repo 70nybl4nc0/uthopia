@@ -136,7 +136,6 @@ GameObject:
   - component: {fileID: 18439310}
   - component: {fileID: 18439311}
   - component: {fileID: 18439312}
-  - component: {fileID: 18439313}
   m_Layer: 0
   m_Name: Agent
   m_TagString: Untagged
@@ -176,15 +175,15 @@ MonoBehaviour:
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 0
-      BranchSizes: 020000000200000002000000020000000200000002000000
-    VectorActionSize: 020000000200000002000000020000000200000002000000
+      BranchSizes: 030000000300000002000000020000000200000002000000
+    VectorActionSize: 030000000300000002000000020000000200000002000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 0
     hasUpgradedBrainParametersWithActionSpec: 1
   m_Model: {fileID: 0}
   m_InferenceDevice: 0
-  m_BehaviorType: 0
-  m_BehaviorName: Test
+  m_BehaviorType: 1
+  m_BehaviorName: SimpleSAC
   TeamId: 0
   m_UseChildSensors: 1
   m_UseChildActuators: 1
@@ -201,7 +200,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a5c9d521e5ef4759a8246a07d52221e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DecisionPeriod: 10
+  DecisionPeriod: 4
   TakeActionsBetweenDecisions: 0
 --- !u!114 &18439311
 MonoBehaviour:
@@ -238,19 +237,7 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 0
---- !u!114 &18439313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 18439306}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e90d9a8fae8c4c19a61f1026f6aa6e4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  MaxStep: 5000
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0

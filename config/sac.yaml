@@ -1,0 +1,24 @@
+behaviors:
+  SimpleSAC:
+    trainer_type: sac
+    hyperparameters:
+      learning_rate: 0.0003
+      learning_rate_schedule: constant
+      batch_size: 32
+      buffer_size: 512
+      buffer_init_steps: 10000
+      tau: 0.005
+      steps_per_update: 4.0
+      save_replay_buffer: False
+      init_entcoef: 0.5
+    network_settings:
+      normalize: false
+      hidden_units: 128
+      num_layers: 2
+    reward_signals:
+      extrinsic:
+        gamma: 0.99
+        strength: 1.0
+    max_steps: 500000
+    time_horizon: 64
+    summary_freq: 10000

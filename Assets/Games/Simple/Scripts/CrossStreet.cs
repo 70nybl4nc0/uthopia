@@ -8,7 +8,7 @@ using Uthopia;
 namespace Uthopia.Games.Simple
 {
 
-    public class CrossStreet : GameController
+    public class CrossStreet : Game
     {
         public EntityController prefab;
         public float speedScale = 1;
@@ -131,7 +131,10 @@ namespace Uthopia.Games.Simple
 
         }
 
-
+        public override InputActionMask GetInputMask()
+        {
+            return new InputActionMask(action5: false, action6: false, action7: false, action8: false);
+        }
 
     }
 }

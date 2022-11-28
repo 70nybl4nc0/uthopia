@@ -9,7 +9,7 @@ using Uthopia;
 namespace Uthopia.Games.Simple
 {
 
-    public class War : GameController
+    public class War : Game
     {
         public EntityController prefab;
         public float speedScale = 1;
@@ -143,7 +143,7 @@ namespace Uthopia.Games.Simple
             };
 
 
-            if (allies.Count == 1 && allies.Contains(m_player))
+            if (allies.Count == 1 && allies.Contains(m_player) && enemies.Count > 0)
                 Lose();
             else
             if (enemies.Count == 0)
@@ -172,6 +172,11 @@ namespace Uthopia.Games.Simple
 
                 yield return new WaitForSeconds(1f);
             }
+        }
+
+        public override InputActionMask GetInputMask()
+        {
+            return new InputActionMask(action5: false, action6: false, action7: false, action8: false);
         }
 
     }

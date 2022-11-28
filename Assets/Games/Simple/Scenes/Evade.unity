@@ -152,7 +152,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 48c415f63b7a94be4a2568f05f1d9976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  onWin:
+    m_PersistentCalls:
+      m_Calls: []
+  onLose:
+    m_PersistentCalls:
+      m_Calls: []
   prefab: {fileID: 7545561624305232784, guid: c1b98c9848df140bebc3a01ce263489f, type: 3}
+  speedScale: 1
+  minNumberOfEnemies: 0
+  maxNumberOfEnemies: 0
 --- !u!4 &2005756093
 Transform:
   m_ObjectHideFlags: 0
